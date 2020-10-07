@@ -7,11 +7,33 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        validarPreferencia()
+        pbautenticacion.visibility = View.GONE
+        btnloginfirebase.setOnClickListener {
+            if(etemail.text?.isNotEmpty()!! &&
+                etpassword.text?.isNotEmpty()!!){
+                pbautenticacion.visibility = View.VISIBLE
+                FirebaseAuth.getInstance().signInWithEmailAndPassword(
+                    etemail.text.toString(), etpassword.text.toString()
+                ).addOnCompleteListener {
+                    if(it.isSuccessful){
+                        guardarPreferenciaIrAlApp(
+                            it.result?.user?.email.toString(),
+                            TipoAutenticacion.FIREBASE.name, "",
+                            ""
+                        )
+                    }
+                }
+            }
+        }
+
     }
 
     private fun obtenerVista(): View{
@@ -27,6 +49,7 @@ class MainActivity : AppCompatActivity() {
         preferencia.putString("nombre", nombre)
         preferencia.putString("urlimg", urlimagen)
         preferencia.apply()
+        pbautenticacion.visibility = View.GONE
         startActivity(Intent(this, HomeActivity::class.java))
 
     }
