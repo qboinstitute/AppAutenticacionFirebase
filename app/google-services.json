@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "381262693994",
+    "firebase_url": "https://proyectoqbofirebase.firebaseio.com",
+    "project_id": "proyectoqbofirebase",
+    "storage_bucket": "proyectoqbofirebase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:381262693994:android:3b82b86ed37fda00a82c13",
+        "android_client_info": {
+          "package_name": "qbo.com.appautenticacionfirebase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "381262693994-urhhfvpot7obmsp0shnn9ud3i45ea8l6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "qbo.com.appautenticacionfirebase",
+            "certificate_hash": "05d59dce9b5e0da5a1b636398caec6e7e607019f"
+          }
+        },
+        {
+          "client_id": "381262693994-fn5qrj3blld7ijochtcqt2oec2gusdct.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCng2lHob8QyZfecixQHVjfGO2JYRTfaNQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "381262693994-fn5qrj3blld7ijochtcqt2oec2gusdct.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
