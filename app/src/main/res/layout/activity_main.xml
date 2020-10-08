@@ -54,7 +54,7 @@
 
     <Button
         android:id="@+id/btnloginfirebase"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="@string/valbtnloginfirebase"
@@ -62,13 +62,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout2" />
 
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/btnlogingoogle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnloginfirebase">
+
+    </com.google.android.gms.common.SignInButton>
+
     <ProgressBar
         android:id="@+id/pbautenticacion"
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnloginfirebase" />
+        app:layout_constraintTop_toBottomOf="@+id/btnlogingoogle" />
 </androidx.constraintlayout.widget.ConstraintLayout>

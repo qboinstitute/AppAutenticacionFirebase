@@ -6,8 +6,16 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -16,7 +24,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         validarPreferencia()
         pbautenticacion.visibility = View.GONE
-        btnloginfirebase.setOnClickListener {
+        //Autenticación Email y password.
+        btnloginfirebase.setOnClickListener { vista ->
             if(etemail.text?.isNotEmpty()!! &&
                 etpassword.text?.isNotEmpty()!!){
                 pbautenticacion.visibility = View.VISIBLE
@@ -29,12 +38,61 @@ class MainActivity : AppCompatActivity() {
                             TipoAutenticacion.FIREBASE.name, "",
                             ""
                         )
+                    }else{
+                        enviarMensaje(vista, "Error en la autenticación.")
                     }
                 }
             }
         }
+        //Autenticación Google
+        btnlogingoogle.setOnClickListener {
+            pbautenticacion.visibility = View.VISIBLE
+            val configlogin = GoogleSignInOptions
+                .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build()
+            val cliente : GoogleSignInClient = GoogleSignIn.getClient(
+                this, configlogin
+            )
+            startActivityForResult(cliente.signInIntent, 777)
+        }
 
     }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == 777){
+            val task : Task<GoogleSignInAccount> =
+                GoogleSignIn.getSignedInAccountFromIntent(data)
+            try{
+                val cuenta : GoogleSignInAccount? =
+                    task.getResult(ApiException::class.java)
+                if(cuenta != null){
+                    val credencial : AuthCredential = GoogleAuthProvider
+                        .getCredential(cuenta.idToken, null)
+                    FirebaseAuth.getInstance().signInWithCredential(credencial)
+                        .addOnCompleteListener {
+                            if(it.isSuccessful){
+                                guardarPreferenciaIrAlApp(
+                                    cuenta.email.toString(),
+                                    TipoAutenticacion.GOOGLE.name,
+                                    cuenta.displayName.toString(),
+                                    cuenta.photoUrl.toString()
+                                )
+                            }else{
+                                enviarMensaje(obtenerVista(), "Error en la autenticación GMAIL")
+                            }
+                        }
+
+                }
+            }catch (e : ApiException){
+                enviarMensaje(obtenerVista(), "Error en la autenticación GMAIL")
+            }
+        }
+    }
+
 
     private fun obtenerVista(): View{
         return findViewById(android.R.id.content)
@@ -67,6 +125,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun enviarMensaje(vista: View, mensaje: String){
+        pbautenticacion.visibility = View.GONE
         Snackbar.make(vista, mensaje, Snackbar.LENGTH_LONG).show()
     }
 
