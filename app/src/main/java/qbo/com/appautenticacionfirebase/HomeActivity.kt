@@ -19,6 +19,7 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import com.facebook.login.LoginManager
 import com.google.firebase.auth.FirebaseAuth
 import com.squareup.picasso.Picasso
 
@@ -26,6 +27,7 @@ class HomeActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var navView: NavigationView
+    private var tipo :String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,7 +59,7 @@ class HomeActivity : AppCompatActivity() {
         val preferencia : SharedPreferences = getSharedPreferences(
             "appFirebaseQBO", Context.MODE_PRIVATE)
         val email : String = preferencia.getString("email", "").toString()
-        val tipo : String = preferencia.getString("tipo", "").toString()
+        tipo  = preferencia.getString("tipo", "").toString()
         val nombre : String = preferencia.getString("nombre", "").toString()
         val urlimagen : String = preferencia.getString("urlimg", "").toString()
         val tvnomusuario: TextView = navView.getHeaderView(0)
@@ -86,6 +88,9 @@ class HomeActivity : AppCompatActivity() {
                 getSharedPreferences("appFirebaseQBO", Context.MODE_PRIVATE).edit()
             preferencias.clear()
             preferencias.apply()
+            if(tipo == TipoAutenticacion.FACEBOOK.name){
+                LoginManager.getInstance().logOut()
+            }
             FirebaseAuth.getInstance().signOut()
             startActivity(Intent(this, MainActivity::class.java))
             finish()
