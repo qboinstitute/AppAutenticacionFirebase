@@ -16,7 +16,15 @@
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
     <string name="valactionsalir">Salir</string>
-    <string name="facebook_app_id">3415676218540289</string> <string name="fb_login_protocol_scheme">fb3415676218540289</string>
+    <string name="facebook_app_id">3415676218540289</string>
+    <string name="fb_login_protocol_scheme">fb3415676218540289</string>
+    <string name="valbtnlogingit">AUTENTICACIÓN CON GIT</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="valnavfoto">Foto</string>
+    <string name="valnavgaleria">Galeria de fotos</string>
+    <string name="valbtntomarfoto">TOMAR FOTO</string>
+    <string name="valbtnsubirfoto">SUBIR FOTO A FIREBASE STORAGE</string>
 
 
 </resources>

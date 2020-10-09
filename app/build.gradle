@@ -62,4 +62,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:18.1.0'
     //3.Autenticación Facebook
     implementation 'com.facebook.android:facebook-android-sdk:5.15.3'
+    //4.Autenticación Github
+    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
+
 }

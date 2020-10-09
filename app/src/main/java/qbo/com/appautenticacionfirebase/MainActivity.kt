@@ -3,8 +3,10 @@ package qbo.com.appautenticacionfirebase
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
@@ -18,15 +20,18 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.auth.AuthCredential
-import com.google.firebase.auth.FacebookAuthProvider
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.*
 import kotlinx.android.synthetic.main.activity_main.*
+import okhttp3.*
+import java.io.IOException
+import java.math.BigInteger
+import java.security.SecureRandom
 
 class MainActivity : AppCompatActivity() {
 
     private val callbackManager = CallbackManager.Factory.create()
+    private val aleatorio: SecureRandom = SecureRandom()
+    private val URL_CALLBACK = "qbogit://git.oauth2token"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -104,9 +109,86 @@ class MainActivity : AppCompatActivity() {
 
             })
         }
+        btnlogingit.setOnClickListener {
+            pbautenticacion.visibility = View.VISIBLE
+            val httpurl = HttpUrl.Builder()
+                .scheme("https")
+                .host("github.com")
+                .addPathSegment("login")
+                .addPathSegment("oauth")
+                .addPathSegment("authorize")
+                .addQueryParameter("client_id", "21aec9b4c931ff0dd271")
+                .addQueryParameter("redirect_uri", URL_CALLBACK)
+                .addQueryParameter("state", obtenerValorAleatorio())
+                .addQueryParameter("scope", "user:email")
+                .build()
+            val intent = Intent(Intent.ACTION_VIEW,
+                Uri.parse(httpurl.toString()))
+            startActivity(intent)
+        }
+        val uri = intent.data
+        if(uri != null && uri.toString().startsWith(URL_CALLBACK)){
+            val code = uri.getQueryParameter("code")
+            val state = uri.getQueryParameter("state")
+            if(code != null && state != null){
+                obtenerCredencial(code, state)
+            }
+        }
+
 
     }
 
+    private fun obtenerCredencial(code: String, state: String) {
+        val okHttpClient = OkHttpClient()
+        val form = FormBody.Builder()
+            .add("client_id", "21aec9b4c931ff0dd271")
+            .add("client_secret", "25b067debd465c9d7ea251ce122317a9b559dd7c")
+            .add("code", code)
+            .add("redirect_uri", URL_CALLBACK)
+            .add("state", state)
+            .build()
+        val request = Request.Builder()
+            .url("https://github.com/login/oauth/access_token")
+            .post(form)
+            .build()
+        okHttpClient.newCall(request).enqueue(object : Callback{
+            override fun onFailure(call: Call, e: IOException) {
+                enviarMensaje(obtenerVista(), "Error en la autenticación GIT")
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val responseBody : String = response.body!!.string()
+                Log.i("TAGTOKEN", responseBody)
+                val valorsplit = responseBody.split("=|&".toRegex()).toTypedArray()
+                if(valorsplit[0].equals("access_token", ignoreCase = true)){
+                    loginGithubConToken(valorsplit[1])
+                }else{
+                    enviarMensaje(obtenerVista(), "Error en la autenticación GIT-TOKEN")
+                }
+            }
+
+        })
+
+    }
+
+    private fun loginGithubConToken(token :String){
+        val credencial = GithubAuthProvider.getCredential(token)
+        FirebaseAuth.getInstance().signInWithCredential(credencial)
+            .addOnCompleteListener {
+                if(it.isSuccessful){
+                    guardarPreferenciaIrAlApp(
+                        it.result?.additionalUserInfo?.username.toString(),
+                        TipoAutenticacion.GITHUB.name,
+                        it.result?.user?.displayName.toString(),
+                        it.result?.user?.photoUrl.toString()
+                    )
+                }
+            }
+    }
+
+    private fun obtenerValorAleatorio(): String {
+        return BigInteger(130, aleatorio).toString(32)
+    }
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
