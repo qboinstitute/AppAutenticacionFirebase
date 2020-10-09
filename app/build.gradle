@@ -60,5 +60,6 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
     //2.Autenticación Google
     implementation 'com.google.android.gms:play-services-auth:18.1.0'
-
+    //3.Autenticación Facebook
+    implementation 'com.facebook.android:facebook-android-sdk:5.15.3'
 }
