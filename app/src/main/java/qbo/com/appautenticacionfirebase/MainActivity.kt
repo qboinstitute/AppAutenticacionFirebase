@@ -109,7 +109,7 @@ class MainActivity : AppCompatActivity() {
         preferencia.apply()
         pbautenticacion.visibility = View.GONE
         startActivity(Intent(this, HomeActivity::class.java))
-
+        finish()
     }
 
     private fun validarPreferencia(){
