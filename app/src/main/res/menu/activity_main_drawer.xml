@@ -13,5 +13,14 @@
             android:icon="@drawable/ic_menu_gallery"
             android:title="@string/valnavgaleria" />
 
+        <item
+            android:id="@+id/nav_fragment_registro"
+            android:icon="@drawable/ic_person_add"
+            android:title="@string/valnavregistro" />
+        <item
+            android:id="@+id/nav_fragment_lista"
+            android:icon="@drawable/ic_list"
+            android:title="@string/valnavlista" />
+
     </group>
 </menu>

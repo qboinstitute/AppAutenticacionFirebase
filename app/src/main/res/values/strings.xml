@@ -25,6 +25,13 @@
     <string name="valnavgaleria">Galeria de fotos</string>
     <string name="valbtntomarfoto">TOMAR FOTO</string>
     <string name="valbtnsubirfoto">SUBIR FOTO A FIREBASE STORAGE</string>
+    <string name="valtvtituloreg">REGISTRO PERSONA FIRESTORE</string>
+    <string name="valetnompersona">Ingrese nombre</string>
+    <string name="valetapepersona">Ingrese apellido</string>
+    <string name="valetedadpersona">Ingrese edad</string>
+    <string name="valbtnregpersona">REGISTRAR PERSONA</string>
+    <string name="valnavregistro">Registro Firestore</string>
+    <string name="valnavlista">Lista Firestore</string>
 
 
 </resources>
