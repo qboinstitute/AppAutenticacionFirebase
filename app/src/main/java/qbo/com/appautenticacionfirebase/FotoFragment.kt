@@ -19,6 +19,7 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.storage.FirebaseStorage
 import java.io.File
 import java.io.IOException
@@ -56,6 +57,17 @@ class FotoFragment : Fragment() {
                 }
             }else{
                 SolicitarPermiso()
+            }
+        }
+
+        btnsubirfoto.setOnClickListener {vista ->
+            var file = Uri.fromFile(File(mRutaFotoActual))
+            val imgref = storage.reference.child("imagenesqbo/${file.lastPathSegment}")
+            var uploadTask = imgref.putFile(file)
+            uploadTask.addOnFailureListener {
+                Snackbar.make(vista, "Error al subir foto", Snackbar.LENGTH_LONG).show()
+            }.addOnSuccessListener {
+                Snackbar.make(vista, "Imagen en Firebase Storage", Snackbar.LENGTH_LONG).show()
             }
         }
 
